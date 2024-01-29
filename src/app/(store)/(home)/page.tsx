@@ -4,7 +4,22 @@ import Image from "next/image";
 import Link from "next/link";
 
 async function getFeaturedProducts(): Promise<Product[]> {
-    const response = await api("/products/featured");
+
+    // force-cache -> Fica no cache por tempo indeterminado
+    // no-store -> Não salva em cache
+
+    /*
+        next: {
+            revalidate: xSegundos
+        }
+            -> Revalidação do cache em segundos
+    */
+
+    const response = await api("/products/featured", {
+        next: {
+            revalidate: 60 * 60,
+        }
+    });
 
     const products = await response.json();
 
