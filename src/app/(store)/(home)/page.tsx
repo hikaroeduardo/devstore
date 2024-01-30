@@ -1,10 +1,10 @@
 import { api } from "@/data/api";
 import { Product } from "@/data/types/product";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 async function getFeaturedProducts(): Promise<Product[]> {
-
     // force-cache -> Fica no cache por tempo indeterminado
     // no-store -> Não salva em cache
 
@@ -18,13 +18,17 @@ async function getFeaturedProducts(): Promise<Product[]> {
     const response = await api("/products/featured", {
         next: {
             revalidate: 60 * 60,
-        }
+        },
     });
 
     const products = await response.json();
 
     return products;
 }
+
+export const metadata: Metadata = {
+    title: "Home",
+};
 
 export default async function Home() {
     const [highLightedProduct, ...otherProducts] = await getFeaturedProducts();
